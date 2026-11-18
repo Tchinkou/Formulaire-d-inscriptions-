@@ -65,7 +65,7 @@
     const digits = v.telephone.replace(/\D/g, "");
     if (!v.telephone) fail("telephone", "Indiquez votre numéro de téléphone.");
     else if (!/^[0-9 +().-]+$/.test(v.telephone) || digits.length < 8 || digits.length > 15)
-      fail("telephone", "Ce numéro n'est pas valide. Exemple : 0555 12 34 56.");
+      fail("telephone", "Ce numéro n'est pas valide. Exemple : 0555******.");
 
     if (v.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email))
       fail("email", "Cette adresse email n'est pas valide.");
