@@ -4,17 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
-  <title>Liste des inscrits</title>
+  <title>Inscrits · Formation AGRITECH</title>
+  <link rel="icon" href="img/logo-agritech.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=Roboto+Condensed:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <header class="admin-head gutter">
+    <div class="in">
+      <img src="img/logo-agritech.png" alt="Club AGRITECH">
+      <div><div class="t">Formation en entrepreneuriat</div><div class="s">Samedi 21/11/2026 · Lac Mezaia · Dr Zidelkhil.H</div></div>
+    </div>
+  </header>
   <!-- Connexion -->
-  <main class="narrow" id="loginView" hidden>
+  <main class="narrow gutter" id="loginView" hidden>
     <div class="card">
-      <h1>Espace administrateur</h1>
+      <h2>Espace organisateur</h2>
       <p class="intro">Connectez-vous pour voir la liste des inscrits.</p>
       <form id="loginForm" novalidate>
         <div class="field">
@@ -32,7 +39,7 @@
   </main>
 
   <!-- Tableau -->
-  <main class="wide" id="tableView" hidden>
+  <main class="wide gutter" id="tableView" hidden>
     <div class="topbar">
       <div>
         <h1>Liste des inscrits</h1>
@@ -77,9 +84,9 @@
   </main>
 
   <!-- Accès refusé -->
-  <main class="narrow" id="deniedView" hidden>
+  <main class="narrow gutter" id="deniedView" hidden>
     <div class="card">
-      <h1>Accès refusé</h1>
+      <h2>Accès refusé</h2>
       <p class="intro">Ce compte n'est pas administrateur. Ajoutez-le à la table <b>admins</b> dans Supabase (voir le README), puis reconnectez-vous.</p>
       <button type="button" class="secondary" id="deniedLogout">Se déconnecter</button>
     </div>

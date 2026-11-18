@@ -77,7 +77,7 @@
 
   function setBusy(busy) {
     $("submit").disabled = busy;
-    $("submit").textContent = busy ? "Envoi en cours…" : "Envoyer mon inscription";
+    $("submit").textContent = busy ? "Envoi en cours…" : "Valider mon inscription";
   }
 
   $("form").addEventListener("submit", async (e) => {

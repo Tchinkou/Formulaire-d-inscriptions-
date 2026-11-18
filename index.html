@@ -3,69 +3,130 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Formulaire d'inscription</title>
+  <title>Inscription · Formation en entrepreneuriat AGRITECH</title>
+  <meta name="description" content="Inscrivez-vous à la formation en entrepreneuriat du club AGRITECH, samedi 21/11/2026 au Lac Mezaia, assurée par le Dr Zidelkhil.H.">
+  <meta property="og:title" content="Formation en entrepreneuriat · Club AGRITECH">
+  <meta property="og:description" content="Samedi 21/11/2026 · Lac Mezaia · À partir de 09h00. Inscription gratuite en ligne.">
+  <meta property="og:image" content="img/logo-agritech.png">
+  <meta name="theme-color" content="#0e3b1c">
+  <link rel="icon" href="img/logo-agritech.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=Roboto+Condensed:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <main class="narrow">
-    <div class="card">
-      <section id="formView">
-        <h1>Inscription</h1>
-        <p class="intro">Remplissez le formulaire ci-dessous. Les champs sans mention sont obligatoires.</p>
-
-        <form id="form" novalidate>
-          <div class="row">
-            <div class="field">
-              <label for="nom">Nom</label>
-              <input type="text" id="nom" name="nom" autocomplete="family-name" maxlength="100" required>
-              <div class="err" id="nom-err"></div>
-            </div>
-            <div class="field">
-              <label for="prenom">Prénom</label>
-              <input type="text" id="prenom" name="prenom" autocomplete="given-name" maxlength="100" required>
-              <div class="err" id="prenom-err"></div>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="telephone">Numéro de téléphone</label>
-            <input type="tel" id="telephone" name="telephone" autocomplete="tel" inputmode="tel" placeholder="0555 12 34 56" maxlength="20" required>
-            <div class="err" id="telephone-err"></div>
-          </div>
-
-          <div class="field">
-            <label for="email">Email <span class="opt">(facultatif)</span></label>
-            <input type="email" id="email" name="email" autocomplete="email" maxlength="200">
-            <div class="err" id="email-err"></div>
-          </div>
-
-          <fieldset>
-            <legend>Statut</legend>
-            <div class="chips" id="statuts"></div>
-            <div class="err" id="statut-err"></div>
-            <div class="field" id="autreWrap" hidden>
-              <label for="statut_autre">Précisez votre statut</label>
-              <input type="text" id="statut_autre" name="statut_autre" maxlength="100">
-              <div class="err" id="statut_autre-err"></div>
-            </div>
-          </fieldset>
-
-          <div class="banner error" id="formError" hidden></div>
-          <button type="submit" id="submit">Envoyer mon inscription</button>
-        </form>
-      </section>
-
-      <section id="doneView" class="done" hidden>
-        <div class="tick" aria-hidden="true">✓</div>
-        <h2>Inscription enregistrée</h2>
-        <p id="doneText">Merci, votre inscription a bien été reçue.</p>
-        <button type="button" class="secondary" id="again">Inscrire une autre personne</button>
-      </section>
+  <header class="hero gutter">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="logo-badge"><img src="img/logo-agritech.png" alt="Club AGRITECH"></div>
+        <p class="kicker">Le club AGRITECH organise une</p>
+        <h1>Formation en entrepreneuriat</h1>
+        <p class="tagline">Innover · Entreprendre · Réussir</p>
+        <ul class="facts">
+          <li>
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg></span>
+            <span><small>Lieu</small>Lac Mezaia</span>
+          </li>
+          <li>
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h2v2h6V2h2v2h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3V2Zm12 7H5v10h14V9ZM7 11h2v2H7v-2Zm4 0h2v2h-2v-2Zm4 0h2v2h-2v-2Zm-8 4h2v2H7v-2Zm4 0h2v2h-2v-2Z"/></svg></span>
+            <span><small>Date</small>Samedi 21/11/2026</span>
+          </li>
+          <li>
+            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <span><small>Heure</small>À partir de 09h00</span>
+          </li>
+        </ul>
+        <div class="trainer">
+          <div><span>Formation assurée par</span><b>le Dr Zidelkhil.H</b></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="img/ampoule.jpg" alt="Jeune pousse dans une ampoule, symbole d'une idée qui grandit" width="410" height="380">
+      </div>
     </div>
-  </main>
+  </header>
+
+  <div class="gutter">
+    <main class="page">
+      <div class="card">
+        <section id="formView">
+          <h2>Je m'inscris</h2>
+          <p class="intro">Les places sont limitées. Remplissez ce formulaire pour réserver la vôtre. Les champs sans mention sont obligatoires.</p>
+
+          <form id="form" novalidate>
+            <div class="row">
+              <div class="field">
+                <label for="nom">Nom</label>
+                <input type="text" id="nom" name="nom" autocomplete="family-name" maxlength="100" required>
+                <div class="err" id="nom-err"></div>
+              </div>
+              <div class="field">
+                <label for="prenom">Prénom</label>
+                <input type="text" id="prenom" name="prenom" autocomplete="given-name" maxlength="100" required>
+                <div class="err" id="prenom-err"></div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="telephone">Numéro de téléphone</label>
+              <input type="tel" id="telephone" name="telephone" autocomplete="tel" inputmode="tel" placeholder="0555 12 34 56" maxlength="20" required>
+              <div class="err" id="telephone-err"></div>
+            </div>
+
+            <div class="field">
+              <label for="email">Email <span class="opt">(facultatif)</span></label>
+              <input type="email" id="email" name="email" autocomplete="email" maxlength="200">
+              <div class="err" id="email-err"></div>
+            </div>
+
+            <fieldset>
+              <legend>Statut</legend>
+              <div class="chips" id="statuts"></div>
+              <div class="err" id="statut-err"></div>
+              <div class="field" id="autreWrap" hidden>
+                <label for="statut_autre">Précisez votre statut</label>
+                <input type="text" id="statut_autre" name="statut_autre" maxlength="100">
+                <div class="err" id="statut_autre-err"></div>
+              </div>
+            </fieldset>
+
+            <div class="banner error" id="formError" hidden></div>
+            <button type="submit" id="submit">Valider mon inscription</button>
+          </form>
+        </section>
+
+        <section id="doneView" class="done" hidden>
+          <div class="tick" aria-hidden="true">✓</div>
+          <h2>Inscription confirmée</h2>
+          <p id="doneText">Merci, votre inscription a bien été reçue.</p>
+          <div class="recap">
+            <div><b>Samedi 21/11/2026</b>, à partir de 09h00</div>
+            <div>Lac Mezaia</div>
+          </div>
+          <div><button type="button" class="secondary" id="again">Inscrire une autre personne</button></div>
+        </section>
+      </div>
+
+      <aside class="perks">
+        <div class="perk">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm15 4h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-1v3l-4-3h-4a2 2 0 0 1-2-2v-1h6a3 3 0 0 0 3-3V8Z"/></svg></span>
+          <div><b>Échanges et partage</b><p>Rencontrez d'autres porteurs d'idées et partagez vos expériences.</p></div>
+        </div>
+        <div class="perk">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm0 10c2 0 3.7.4 5 1.1L13.6 19H3v-1.5C3 15 6.1 13 10 13Zm8 0 1.2 2.6 2.8.3-2.1 1.9.6 2.8-2.5-1.5-2.5 1.5.6-2.8-2.1-1.9 2.8-.3L18 13Z"/></svg></span>
+          <div><b>Conseils d'experts</b><p>Une formation assurée par le Dr Zidelkhil.H.</p></div>
+        </div>
+        <div class="perk">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12.6 5.3 2-1.3a2 2 0 0 1 2 0L22 7.4V14l-2.3 1.4-5.9-5.3-2.4 1.6a1.8 1.8 0 0 1-2-3l3.2-3.4ZM2 7.4l4.8-3a2 2 0 0 1 2.1 0l1.3.8-2.9 3a3.3 3.3 0 0 0 4.3 5l1.6-1 5.4 4.9-1 1a1.5 1.5 0 0 1-2.1.2l-.5.5a1.5 1.5 0 0 1-2.1 0l-.4.4a1.5 1.5 0 0 1-2.1 0L2 13.9V7.4Z"/></svg></span>
+          <div><b>Réseautage et opportunités</b><p>Construisez votre réseau et ouvrez des portes pour votre projet.</p></div>
+        </div>
+        <p class="quote">Donnez vie à vos idées, construisez vos projets et osez entreprendre !</p>
+      </aside>
+    </main>
+  </div>
+
+  <footer class="footer-band gutter">Une idée aujourd'hui, <span>une réussite demain !</span></footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
   <script src="js/config.js"></script>
