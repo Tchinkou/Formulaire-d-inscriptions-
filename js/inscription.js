@@ -113,7 +113,34 @@
     $("doneText").textContent = "Merci " + v.prenom + ", votre inscription a bien été reçue.";
     $("formView").hidden = true;
     $("doneView").hidden = false;
+    $("doneView").scrollIntoView({ behavior: "smooth", block: "start" });
+    afficherInvitation(v);
   });
+
+  // ---------- Invitation personnalisée ----------
+  async function afficherInvitation(v) {
+    const img = $("inviteImg"), dl = $("inviteDl"), wait = $("inviteWait");
+    img.hidden = true; dl.hidden = true; wait.hidden = false;
+    wait.textContent = "Création de votre invitation…";
+    try {
+      const canvas = await window.genererInvitation($("inviteCanvas"), {
+        nom: v.nom,
+        prenom: v.prenom,
+        statutLabel: v.statut === "Autre" ? v.statut_autre : v.statut,
+      });
+      const blob = await new Promise((r) => canvas.toBlob(r, "image/png"));
+      if (dl.href && dl.href.startsWith("blob:")) URL.revokeObjectURL(dl.href);
+      const url = URL.createObjectURL(blob);
+      const fichier = ("invitation-agritech-" + v.prenom + "-" + v.nom)
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9-]+/g, "-").toLowerCase() + ".png";
+      img.src = url; dl.href = url; dl.download = fichier;
+      img.hidden = false; dl.hidden = false; wait.hidden = true;
+    } catch (e) {
+      console.error(e);
+      wait.textContent = "L'invitation n'a pas pu être créée, mais votre inscription est bien enregistrée.";
+    }
+  }
 
   $("again").addEventListener("click", () => {
     $("form").reset();
