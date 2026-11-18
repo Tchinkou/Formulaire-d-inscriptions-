@@ -6,8 +6,8 @@
 // Cette clé est publique : avec les règles du fichier sql/schema.sql,
 // elle permet seulement d'ajouter une inscription, pas de lire la liste.
 window.APP_CONFIG = {
-  SUPABASE_URL: "https://VOTRE-PROJET.supabase.co",
-  SUPABASE_KEY: "VOTRE_CLE_PUBLIQUE",
+  SUPABASE_URL: "https://qkktkukjxmwdlnufuzcv.supabase.co",
+  SUPABASE_KEY: "sb_publishable_K0dsZ4YYiIcTJxC5L4-v0Q_8PNBZmPd",
 };
 
 // Liste des statuts proposés. Si tu la modifies, modifie aussi la liste
