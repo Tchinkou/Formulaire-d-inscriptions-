@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Formulaire d'inscription</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="narrow">
+    <div class="card">
+      <section id="formView">
+        <h1>Inscription</h1>
+        <p class="intro">Remplissez le formulaire ci-dessous. Les champs sans mention sont obligatoires.</p>
+
+        <form id="form" novalidate>
+          <div class="row">
+            <div class="field">
+              <label for="nom">Nom</label>
+              <input type="text" id="nom" name="nom" autocomplete="family-name" maxlength="100" required>
+              <div class="err" id="nom-err"></div>
+            </div>
+            <div class="field">
+              <label for="prenom">Prénom</label>
+              <input type="text" id="prenom" name="prenom" autocomplete="given-name" maxlength="100" required>
+              <div class="err" id="prenom-err"></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="telephone">Numéro de téléphone</label>
+            <input type="tel" id="telephone" name="telephone" autocomplete="tel" inputmode="tel" placeholder="0555 12 34 56" maxlength="20" required>
+            <div class="err" id="telephone-err"></div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email <span class="opt">(facultatif)</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" maxlength="200">
+            <div class="err" id="email-err"></div>
+          </div>
+
+          <fieldset>
+            <legend>Statut</legend>
+            <div class="chips" id="statuts"></div>
+            <div class="err" id="statut-err"></div>
+            <div class="field" id="autreWrap" hidden>
+              <label for="statut_autre">Précisez votre statut</label>
+              <input type="text" id="statut_autre" name="statut_autre" maxlength="100">
+              <div class="err" id="statut_autre-err"></div>
+            </div>
+          </fieldset>
+
+          <div class="banner error" id="formError" hidden></div>
+          <button type="submit" id="submit">Envoyer mon inscription</button>
+        </form>
+      </section>
+
+      <section id="doneView" class="done" hidden>
+        <div class="tick" aria-hidden="true">✓</div>
+        <h2>Inscription enregistrée</h2>
+        <p id="doneText">Merci, votre inscription a bien été reçue.</p>
+        <button type="button" class="secondary" id="again">Inscrire une autre personne</button>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/inscription.js"></script>
+</body>
+</html>

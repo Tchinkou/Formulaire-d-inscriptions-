@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Liste des inscrits</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Connexion -->
+  <main class="narrow" id="loginView" hidden>
+    <div class="card">
+      <h1>Espace administrateur</h1>
+      <p class="intro">Connectez-vous pour voir la liste des inscrits.</p>
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="loginPassword">Mot de passe</label>
+          <input type="password" id="loginPassword" autocomplete="current-password" required>
+        </div>
+        <div class="banner error" id="loginError" hidden></div>
+        <button type="submit" id="loginBtn">Se connecter</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- Tableau -->
+  <main class="wide" id="tableView" hidden>
+    <div class="topbar">
+      <div>
+        <h1>Liste des inscrits</h1>
+        <p class="muted" id="lastSync" style="margin:0">Chargement…</p>
+      </div>
+      <div class="who">
+        <span id="whoEmail"></span>
+        <button type="button" class="secondary small" id="refreshBtn">Actualiser</button>
+        <button type="button" class="secondary small" id="exportBtn">Exporter en CSV</button>
+        <button type="button" class="secondary small" id="logoutBtn">Se déconnecter</button>
+      </div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="toolbar">
+      <input type="search" id="search" placeholder="Rechercher un nom, un téléphone, un email…" aria-label="Rechercher">
+      <select id="filterStatut" aria-label="Filtrer par statut">
+        <option value="">Tous les statuts</option>
+      </select>
+    </div>
+
+    <div class="banner error" id="tableError" hidden style="margin-bottom:14px"></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><button class="sort" data-key="created_at">Date ↓</button></th>
+            <th><button class="sort" data-key="nom">Nom</button></th>
+            <th><button class="sort" data-key="prenom">Prénom</button></th>
+            <th>Téléphone</th>
+            <th>Email</th>
+            <th><button class="sort" data-key="statut">Statut</button></th>
+            <th><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty" hidden>Aucune inscription pour le moment. Elles apparaîtront ici dès qu'une personne remplira le formulaire.</div>
+    </div>
+  </main>
+
+  <!-- Accès refusé -->
+  <main class="narrow" id="deniedView" hidden>
+    <div class="card">
+      <h1>Accès refusé</h1>
+      <p class="intro">Ce compte n'est pas administrateur. Ajoutez-le à la table <b>admins</b> dans Supabase (voir le README), puis reconnectez-vous.</p>
+      <button type="button" class="secondary" id="deniedLogout">Se déconnecter</button>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
