@@ -233,3 +233,6 @@ td.muted, .muted { color: var(--muted); }
 .trash-note { margin: -6px 0 14px; font-size: .9rem; }
 button.restore { background: transparent; color: var(--forest); border-color: var(--green); }
 button.restore:hover { background: var(--accent-soft); }
+
+.facts a.tel { color: #fff; text-decoration: none; font-variant-numeric: tabular-nums; }
+.facts a.tel:hover { color: var(--gold); text-decoration: underline; }
