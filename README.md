@@ -13,6 +13,7 @@ js/config.js        URL et clé Supabase + liste des statuts  <- à modifier
 js/inscription.js   logique du formulaire
 js/admin.js         logique du tableau
 sql/schema.sql      tables et règles de sécurité Supabase
+sql/02_corbeille.sql  ajout de la corbeille (bases existantes)
 ```
 
 ## Installation
@@ -41,6 +42,10 @@ Cette clé est publique et peut être dans le dépôt GitHub : les règles de s�
 3. Après une minute :
    - formulaire : `https://<ton-compte>.github.io/<depot>/`
    - tableau : `https://<ton-compte>.github.io/<depot>/admin.html`
+
+## Corbeille
+Dans le tableau, « Mettre à la corbeille » déplace une inscription dans l'onglet **Corbeille**, d'où on peut la restaurer ou la supprimer définitivement.
+Si ta base a été créée avant cette fonction, exécute une fois `sql/02_corbeille.sql` dans **SQL Editor**.
 
 ## Modifier la liste des statuts
 Change la liste dans `js/config.js` **et** dans `sql/schema.sql` (contrainte `statut in (...)`), puis réexécute dans Supabase :

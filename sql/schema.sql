@@ -16,6 +16,7 @@ create table if not exists public.inscriptions (
                   'Sans emploi','Retraité','Autre')),
   statut_autre  text check (statut_autre is null or char_length(statut_autre) <= 100),
   created_at    timestamptz not null default now(),
+  supprime_le   timestamptz,            -- rempli quand l'inscription est mise à la corbeille
   constraint statut_autre_requis
     check (statut <> 'Autre' or (statut_autre is not null and char_length(btrim(statut_autre)) > 0))
 );
@@ -52,11 +53,13 @@ revoke all on public.admins       from anon, authenticated;
 -- Tout le monde peut s'inscrire (ajouter une ligne), personne ne peut lire sans être admin
 grant insert on public.inscriptions to anon, authenticated;
 grant select, delete on public.inscriptions to authenticated;
+grant update (supprime_le) on public.inscriptions to authenticated;
 grant select on public.admins to authenticated;
 
 drop policy if exists inscriptions_ajout_public  on public.inscriptions;
 drop policy if exists inscriptions_lecture_admin on public.inscriptions;
 drop policy if exists inscriptions_suppr_admin   on public.inscriptions;
+drop policy if exists inscriptions_maj_admin     on public.inscriptions;
 drop policy if exists admins_lecture_soi         on public.admins;
 
 create policy inscriptions_ajout_public on public.inscriptions
@@ -67,6 +70,10 @@ create policy inscriptions_lecture_admin on public.inscriptions
 
 create policy inscriptions_suppr_admin on public.inscriptions
   for delete to authenticated using (public.est_admin());
+
+-- Mise à la corbeille / restauration (colonne supprime_le)
+create policy inscriptions_maj_admin on public.inscriptions
+  for update to authenticated using (public.est_admin()) with check (public.est_admin());
 
 -- Un utilisateur connecté peut seulement vérifier s'il est lui-même admin
 create policy admins_lecture_soi on public.admins

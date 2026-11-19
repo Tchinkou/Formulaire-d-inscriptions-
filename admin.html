@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=Roboto+Condensed:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=4">
 </head>
 <body>
   <header class="admin-head gutter">
@@ -53,6 +53,12 @@
       </div>
     </div>
 
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" class="tab" id="tabActifs" aria-selected="true">Inscrits <span id="countActifs">0</span></button>
+      <button type="button" role="tab" class="tab" id="tabCorbeille" aria-selected="false">Corbeille <span id="countCorbeille">0</span></button>
+    </div>
+    <p class="muted trash-note" id="trashNote" hidden>Les inscriptions supprimées restent ici. Vous pouvez les restaurer ou les supprimer définitivement.</p>
+
     <div class="stats" id="stats"></div>
 
     <div class="toolbar">
@@ -74,6 +80,7 @@
             <th>Téléphone</th>
             <th>Email</th>
             <th><button class="sort" data-key="statut">Statut</button></th>
+            <th id="thSupprime" hidden><button class="sort" data-key="supprime_le">Supprimée le</button></th>
             <th><span class="sr-only">Actions</span></th>
           </tr>
         </thead>
@@ -94,6 +101,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
   <script src="js/config.js?v=3"></script>
-  <script src="js/admin.js?v=3"></script>
+  <script src="js/admin.js?v=4"></script>
 </body>
 </html>

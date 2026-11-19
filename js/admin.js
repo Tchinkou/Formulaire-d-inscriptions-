@@ -9,6 +9,8 @@
   let sortAsc = false;
   let pendingDelete = null;
   let timer = null;
+  let vue = "actifs";          // "actifs" ou "corbeille"
+  let corbeilleDispo = true;   // false si la colonne supprime_le n'existe pas encore
 
   const dateFmt = new Intl.DateTimeFormat("fr-FR", { dateStyle: "short", timeStyle: "short" });
 
@@ -74,6 +76,7 @@
     }
     $("tableError").hidden = true;
     rows = data || [];
+    corbeilleDispo = rows.length === 0 || "supprime_le" in rows[0];
     $("lastSync").textContent = "Mis à jour à " + new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
     renderFilters();
     render();
@@ -84,10 +87,14 @@
     return r.statut === "Autre" && r.statut_autre ? "Autre : " + r.statut_autre : r.statut;
   }
 
+  const actifs = () => rows.filter((r) => !r.supprime_le);
+  const supprimes = () => rows.filter((r) => r.supprime_le);
+  const rowsVue = () => (vue === "corbeille" ? supprimes() : actifs());
+
   function filtered() {
     const q = $("search").value.trim().toLowerCase();
     const st = $("filterStatut").value;
-    let list = rows.filter((r) => {
+    let list = rowsVue().filter((r) => {
       if (st && r.statut !== st) return false;
       if (!q) return true;
       return [r.nom, r.prenom, r.telephone, r.email, r.statut, r.statut_autre]
@@ -105,7 +112,10 @@
     const sel = $("filterStatut");
     const current = sel.value;
     const counts = {};
-    rows.forEach((r) => (counts[r.statut] = (counts[r.statut] || 0) + 1));
+    const base = rowsVue();
+    base.forEach((r) => (counts[r.statut] = (counts[r.statut] || 0) + 1));
+    $("countActifs").textContent = actifs().length;
+    $("countCorbeille").textContent = supprimes().length;
     sel.length = 1;
     window.STATUTS.forEach((s) => {
       const o = document.createElement("option");
@@ -119,8 +129,8 @@
     stats.replaceChildren();
     const total = document.createElement("span");
     total.className = "stat total";
-    total.innerHTML = "<b></b> inscrits";
-    total.querySelector("b").textContent = rows.length;
+    total.innerHTML = vue === "corbeille" ? "<b></b> dans la corbeille" : "<b></b> inscrits";
+    total.querySelector("b").textContent = base.length;
     stats.append(total);
     Object.entries(counts).sort((a, b) => b[1] - a[1]).forEach(([s, n]) => {
       const el = document.createElement("span");
@@ -144,9 +154,14 @@
     tbody.replaceChildren();
     const list = filtered();
     $("empty").hidden = list.length > 0;
-    $("empty").textContent = rows.length
+    const corb = vue === "corbeille";
+    $("thSupprime").hidden = !corb;
+    $("trashNote").hidden = !corb;
+    $("empty").textContent = rowsVue().length
       ? "Aucune inscription ne correspond à cette recherche."
-      : "Aucune inscription pour le moment. Elles apparaîtront ici dès qu'une personne remplira le formulaire.";
+      : corb
+        ? "La corbeille est vide."
+        : "Aucune inscription pour le moment. Elles apparaîtront ici dès qu'une personne remplira le formulaire.";
 
     list.forEach((r) => {
       const tr = document.createElement("tr");
@@ -163,14 +178,27 @@
       badge.textContent = statutLabel(r);
       tdStatut.append(badge);
       tr.append(tdStatut);
+      if (corb) tr.append(cell(dateFmt.format(new Date(r.supprime_le)), "num muted"));
 
       const tdAct = document.createElement("td");
       const box = document.createElement("div");
       box.className = "actions";
-      if (pendingDelete === r.id) {
+      const btn = (cls, txt, fn) => {
+        const b = document.createElement("button");
+        b.className = cls + " small"; b.textContent = txt; b.addEventListener("click", fn);
+        return b;
+      };
+      if (corb && pendingDelete !== r.id) {
+        box.append(
+          btn("restore", "Restaurer", () => setCorbeille(r.id, null)),
+          btn("ghost-danger", "Supprimer définitivement", () => { pendingDelete = r.id; render(); })
+        );
+      } else if (!corb && corbeilleDispo) {
+        box.append(btn("ghost-danger", "Mettre à la corbeille", () => setCorbeille(r.id, new Date().toISOString())));
+      } else if (pendingDelete === r.id) {
         const yes = document.createElement("button");
         yes.className = "danger small";
-        yes.textContent = "Confirmer";
+        yes.textContent = corb ? "Oui, supprimer pour toujours" : "Confirmer";
         yes.addEventListener("click", () => remove(r.id));
         const no = document.createElement("button");
         no.className = "secondary small";
@@ -189,6 +217,41 @@
       tbody.append(tr);
     });
   }
+
+  async function setCorbeille(id, valeur) {
+    const { error } = await db.from("inscriptions").update({ supprime_le: valeur }).eq("id", id);
+    if (error) {
+      console.error(error);
+      $("tableError").textContent = valeur
+        ? "Impossible de mettre à la corbeille. Vérifiez que le script sql/02_corbeille.sql a été exécuté dans Supabase."
+        : "La restauration a échoué. Réessayez.";
+      $("tableError").hidden = false;
+      return;
+    }
+    $("tableError").hidden = true;
+    const r = rows.find((x) => x.id === id);
+    if (r) r.supprime_le = valeur;
+    renderFilters();
+    render();
+  }
+
+  function changerVue(v) {
+    vue = v;
+    pendingDelete = null;
+    $("tabActifs").setAttribute("aria-selected", v === "actifs");
+    $("tabCorbeille").setAttribute("aria-selected", v === "corbeille");
+    renderFilters();
+    render();
+  }
+  $("tabActifs").addEventListener("click", () => changerVue("actifs"));
+  $("tabCorbeille").addEventListener("click", () => {
+    if (!corbeilleDispo) {
+      $("tableError").textContent = "La corbeille n'est pas encore activée. Exécutez le script sql/02_corbeille.sql dans Supabase (SQL Editor), puis actualisez.";
+      $("tableError").hidden = false;
+      return;
+    }
+    changerVue("corbeille");
+  });
 
   async function remove(id) {
     const { error } = await db.from("inscriptions").delete().eq("id", id);
@@ -228,7 +291,7 @@
     const blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "inscriptions-" + new Date().toISOString().slice(0, 10) + ".csv";
+    a.download = (vue === "corbeille" ? "corbeille-" : "inscriptions-") + new Date().toISOString().slice(0, 10) + ".csv";
     document.body.append(a);
     a.click();
     a.remove();
