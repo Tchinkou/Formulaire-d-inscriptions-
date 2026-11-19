@@ -126,7 +126,7 @@ window.genererInvitation = (function () {
 
     // Trois pastilles : lieu, date, heure
     const facts = [["LIEU", "Lac Mezaia"], ["DATE", "Samedi 21/11/2026"], ["HEURE", "À partir de 09h00"]];
-    const bw = 300, gap = 24, total = bw * 3 + gap * 2, y0 = 960;
+    const bw = 300, gap = 24, total = bw * 3 + gap * 2, y0 = 940;
     facts.forEach(([k, v], i) => {
       const x = cx - total / 2 + i * (bw + gap);
       ctx.fillStyle = C.forest; roundRect(ctx, x, y0, bw, 120, 18); ctx.fill();
@@ -136,6 +136,10 @@ window.genererInvitation = (function () {
       ctx.fillStyle = "#ffffff"; ctx.font = `700 32px ${COND}`;
       ctx.fillText(v, x + bw / 2, y0 + 90, bw - 24);
     });
+
+    // Numéro de renseignements
+    ctx.fillStyle = C.forest; ctx.font = `700 28px ${COND}`;
+    ctx.fillText("Renseignements : 0562 07 74 22", cx, 1108);
 
     // Bandeau du bas
     ctx.fillStyle = C.forest; roundRect(ctx, 44, H - 210, W - 88, 166, 20); ctx.fill();
