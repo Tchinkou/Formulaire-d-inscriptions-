@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=Roboto+Condensed:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
   <header class="admin-head gutter">
@@ -66,6 +66,12 @@
       <select id="filterStatut" aria-label="Filtrer par statut">
         <option value="">Tous les statuts</option>
       </select>
+      <select id="filterAppel" aria-label="Filtrer par appel">
+        <option value="">Tous les appels</option>
+      </select>
+      <select id="filterPresence" aria-label="Filtrer par présence">
+        <option value="">Toutes les présences</option>
+      </select>
     </div>
 
     <div class="banner error" id="tableError" hidden style="margin-bottom:14px"></div>
@@ -80,6 +86,8 @@
             <th>Téléphone</th>
             <th>Email</th>
             <th><button class="sort" data-key="statut">Statut</button></th>
+            <th class="col-suivi"><button class="sort" data-key="appel">Appel</button></th>
+            <th class="col-suivi"><button class="sort" data-key="presence">Présence</button></th>
             <th id="thSupprime" hidden><button class="sort" data-key="supprime_le">Supprimée le</button></th>
             <th><span class="sr-only">Actions</span></th>
           </tr>
@@ -101,6 +109,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
   <script src="js/config.js?v=3"></script>
-  <script src="js/admin.js?v=4"></script>
+  <script src="js/admin.js?v=6"></script>
 </body>
 </html>

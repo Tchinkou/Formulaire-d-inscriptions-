@@ -12,6 +12,20 @@
   let vue = "actifs";          // "actifs" ou "corbeille"
   let corbeilleDispo = true;   // false si la colonne supprime_le n'existe pas encore
 
+  // Suivi des appels et de la présence
+  const APPEL = [
+    ["a_appeler", "Pas encore appelé"],
+    ["appele", "Appelé"],
+    ["sans_reponse", "Pas répondu"],
+  ];
+  const PRESENCE = [
+    ["non_confirme", "Non confirmé"],
+    ["confirme", "Confirmé, il vient"],
+    ["absent", "Ne vient pas"],
+  ];
+  const label = (liste, v) => (liste.find((x) => x[0] === v) || [v, v])[1];
+  let suiviDispo = true; // false si sql/03_suivi_appels.sql n'a pas encore été exécuté
+
   const dateFmt = new Intl.DateTimeFormat("fr-FR", { dateStyle: "short", timeStyle: "short" });
 
   // ---------- Vues ----------
@@ -77,6 +91,9 @@
     $("tableError").hidden = true;
     rows = data || [];
     corbeilleDispo = rows.length === 0 || "supprime_le" in rows[0];
+    suiviDispo = rows.length === 0 || "appel" in rows[0];
+    document.querySelectorAll(".col-suivi").forEach((th) => (th.hidden = !suiviDispo));
+    $("filterAppel").hidden = $("filterPresence").hidden = !suiviDispo;
     $("lastSync").textContent = "Mis à jour à " + new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
     renderFilters();
     render();
@@ -94,8 +111,12 @@
   function filtered() {
     const q = $("search").value.trim().toLowerCase();
     const st = $("filterStatut").value;
+    const fa = $("filterAppel").value;
+    const fp = $("filterPresence").value;
     let list = rowsVue().filter((r) => {
       if (st && r.statut !== st) return false;
+      if (fa && r.appel !== fa) return false;
+      if (fp && r.presence !== fp) return false;
       if (!q) return true;
       return [r.nom, r.prenom, r.telephone, r.email, r.statut, r.statut_autre]
         .filter(Boolean).join(" ").toLowerCase().includes(q);
@@ -125,6 +146,20 @@
     });
     sel.value = current;
 
+    // Filtres appel / présence avec leurs compteurs
+    [["filterAppel", APPEL, "appel", "Tous les appels"], ["filterPresence", PRESENCE, "presence", "Toutes les présences"]]
+      .forEach(([id, liste, champ]) => {
+        const f = $(id), cur = f.value;
+        f.length = 1;
+        liste.forEach(([v, l]) => {
+          const o = document.createElement("option");
+          o.value = v;
+          o.textContent = l + " (" + base.filter((r) => r[champ] === v).length + ")";
+          f.append(o);
+        });
+        f.value = cur;
+      });
+
     const stats = $("stats");
     stats.replaceChildren();
     const total = document.createElement("span");
@@ -132,6 +167,21 @@
     total.innerHTML = vue === "corbeille" ? "<b></b> dans la corbeille" : "<b></b> inscrits";
     total.querySelector("b").textContent = base.length;
     stats.append(total);
+    if (suiviDispo && vue !== "corbeille") {
+      [["confirme", "Confirmés", "ok"], ["absent", "Ne viennent pas", "no"]].forEach(([v, l, cls]) => {
+        const el = document.createElement("span");
+        el.className = "stat suivi-" + cls;
+        el.innerHTML = "<span></span> · <b></b>";
+        el.children[0].textContent = l;
+        el.children[1].textContent = base.filter((r) => r.presence === v).length;
+        stats.append(el);
+      });
+      const el = document.createElement("span");
+      el.className = "stat suivi-todo";
+      el.innerHTML = "<span>À appeler</span> · <b></b>";
+      el.children[1].textContent = base.filter((r) => r.appel === "a_appeler").length;
+      stats.append(el);
+    }
     Object.entries(counts).sort((a, b) => b[1] - a[1]).forEach(([s, n]) => {
       const el = document.createElement("span");
       el.className = "stat";
@@ -178,6 +228,9 @@
       badge.textContent = statutLabel(r);
       tdStatut.append(badge);
       tr.append(tdStatut);
+      if (suiviDispo) {
+        tr.append(choix(r, "appel", APPEL), choix(r, "presence", PRESENCE));
+      }
       if (corb) tr.append(cell(dateFmt.format(new Date(r.supprime_le)), "num muted"));
 
       const tdAct = document.createElement("td");
@@ -194,7 +247,9 @@
           btn("ghost-danger", "Supprimer définitivement", () => { pendingDelete = r.id; render(); })
         );
       } else if (!corb && corbeilleDispo) {
-        box.append(btn("ghost-danger", "Mettre à la corbeille", () => setCorbeille(r.id, new Date().toISOString())));
+        const b = btn("ghost-danger", "Supprimer", () => setCorbeille(r.id, new Date().toISOString()));
+        b.title = "Mettre à la corbeille (vous pourrez la restaurer)";
+        box.append(b);
       } else if (pendingDelete === r.id) {
         const yes = document.createElement("button");
         yes.className = "danger small";
@@ -216,6 +271,40 @@
       tr.append(tdAct);
       tbody.append(tr);
     });
+  }
+
+  // Liste déroulante colorée pour l'appel ou la présence
+  function choix(r, champ, liste) {
+    const td = document.createElement("td");
+    const sel = document.createElement("select");
+    sel.className = "suivi suivi-" + r[champ];
+    sel.setAttribute("aria-label", (champ === "appel" ? "Appel de " : "Présence de ") + r.prenom + " " + r.nom);
+    liste.forEach(([v, l]) => {
+      const o = document.createElement("option");
+      o.value = v; o.textContent = l;
+      sel.append(o);
+    });
+    sel.value = r[champ];
+    sel.addEventListener("change", async () => {
+      const ancien = r[champ], nouveau = sel.value;
+      sel.disabled = true;
+      const { error } = await db.from("inscriptions").update({ [champ]: nouveau }).eq("id", r.id);
+      sel.disabled = false;
+      if (error) {
+        console.error(error);
+        sel.value = ancien;
+        $("tableError").textContent = "Le changement n'a pas été enregistré. Vérifiez que le script sql/03_suivi_appels.sql a été exécuté dans Supabase, puis réessayez.";
+        $("tableError").hidden = false;
+        return;
+      }
+      $("tableError").hidden = true;
+      r[champ] = nouveau;
+      sel.className = "suivi suivi-" + nouveau;
+      renderFilters();
+      if ($("filterAppel").value || $("filterPresence").value) render();
+    });
+    td.append(sel);
+    return td;
   }
 
   async function setCorbeille(id, valeur) {
@@ -268,6 +357,8 @@
 
   $("search").addEventListener("input", render);
   $("filterStatut").addEventListener("change", render);
+  $("filterAppel").addEventListener("change", render);
+  $("filterPresence").addEventListener("change", render);
 
   document.querySelectorAll("th button.sort").forEach((b) => {
     b.addEventListener("click", () => {
@@ -282,11 +373,12 @@
 
   // ---------- Export CSV (s'ouvre dans Excel) ----------
   $("exportBtn").addEventListener("click", () => {
-    const head = ["Date", "Nom", "Prénom", "Téléphone", "Email", "Statut", "Statut (précision)"];
+    const head = ["Date", "Nom", "Prénom", "Téléphone", "Email", "Statut", "Statut (précision)", "Appel", "Présence"];
     const esc = (v) => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
     const lines = [head.map(esc).join(";")].concat(
       filtered().map((r) => [dateFmt.format(new Date(r.created_at)), r.nom, r.prenom, r.telephone,
-        r.email, r.statut, r.statut_autre].map(esc).join(";"))
+        r.email, r.statut, r.statut_autre,
+        r.appel ? label(APPEL, r.appel) : "", r.presence ? label(PRESENCE, r.presence) : ""].map(esc).join(";"))
     );
     const blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
     const a = document.createElement("a");

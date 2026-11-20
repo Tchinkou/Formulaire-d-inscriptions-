@@ -17,6 +17,10 @@ create table if not exists public.inscriptions (
   statut_autre  text check (statut_autre is null or char_length(statut_autre) <= 100),
   created_at    timestamptz not null default now(),
   supprime_le   timestamptz,            -- rempli quand l'inscription est mise à la corbeille
+  appel         text not null default 'a_appeler'
+                check (appel in ('a_appeler', 'appele', 'sans_reponse')),
+  presence      text not null default 'non_confirme'
+                check (presence in ('non_confirme', 'confirme', 'absent')),
   constraint statut_autre_requis
     check (statut <> 'Autre' or (statut_autre is not null and char_length(btrim(statut_autre)) > 0))
 );
@@ -53,7 +57,7 @@ revoke all on public.admins       from anon, authenticated;
 -- Tout le monde peut s'inscrire (ajouter une ligne), personne ne peut lire sans être admin
 grant insert on public.inscriptions to anon, authenticated;
 grant select, delete on public.inscriptions to authenticated;
-grant update (supprime_le) on public.inscriptions to authenticated;
+grant update (appel, presence, supprime_le) on public.inscriptions to authenticated;
 grant select on public.admins to authenticated;
 
 drop policy if exists inscriptions_ajout_public  on public.inscriptions;

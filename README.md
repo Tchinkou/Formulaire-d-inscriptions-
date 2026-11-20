@@ -14,6 +14,7 @@ js/inscription.js   logique du formulaire
 js/admin.js         logique du tableau
 sql/schema.sql      tables et règles de sécurité Supabase
 sql/02_corbeille.sql  ajout de la corbeille (bases existantes)
+sql/03_suivi_appels.sql  suivi des appels et de la présence (bases existantes)
 ```
 
 ## Installation
@@ -46,6 +47,9 @@ Cette clé est publique et peut être dans le dépôt GitHub : les règles de s�
 ## Corbeille
 Dans le tableau, « Mettre à la corbeille » déplace une inscription dans l'onglet **Corbeille**, d'où on peut la restaurer ou la supprimer définitivement.
 Si ta base a été créée avant cette fonction, exécute une fois `sql/02_corbeille.sql` dans **SQL Editor**.
+
+## Suivi des appels et de la présence
+Deux colonnes du tableau permettent de noter, pour chaque inscrit, l'appel (pas encore appelé, appelé, pas répondu) et la présence (non confirmé, confirmé, ne vient pas). Si ta base a été créée avant cette fonction, exécute une fois `sql/03_suivi_appels.sql` dans **SQL Editor**.
 
 ## Modifier la liste des statuts
 Change la liste dans `js/config.js` **et** dans `sql/schema.sql` (contrainte `statut in (...)`), puis réexécute dans Supabase :
